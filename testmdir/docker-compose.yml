@@ -1,0 +1,41 @@
+version: '3'
+services:
+  db:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    ports:
+      - "5432:5432"
+    image: 'maximbaryshnikov/db:v1'
+
+  # db:
+  #   image: postgres:9.6
+  #   ports:
+  #     - "5432:5432"
+  #   environment:
+  #     POSTGRES_USER: docker
+  #     POSTGRES_PASSWORD: docker
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    volumes:
+      - "./web/src:/web/src"
+    ports:
+      - "8080:8080"
+    image: 'maximbaryshnikov/web:v1'
+    # links:
+    #   - db
+    # depends_on:
+    #   - db
+    environment:
+      SOME_ENV: SOME_VALUE
+      DATABASE_URL: postgresql://database:5432/somedb
+      DATABASE_NAME: somedb
+      DATABASE_HOST: db
+
+      DATABASE_USERNAME: docker
+      DATABASE_PASSWORD: docker
+      DATABASE_PORT: 5432
+      DATABASE_DIALECT: postgres
